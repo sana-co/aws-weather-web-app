@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Weather App</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #111;
+      color: #fff;
+      text-align: center;
+      padding: 50px;
+    }
+    input {
+      padding: 10px;
+      font-size: 18px;
+      border-radius: 5px;
+      border: none;
+      width: 250px;
+    }
+    button {
+      padding: 10px 20px;
+      margin-left: 10px;
+      font-size: 18px;
+      cursor: pointer;
+    }
+    #result {
+      margin-top: 20px;
+      font-size: 20px;
+      white-space: pre-line;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🌦 Weather App</h1>
+
+  <input id="cityInput" placeholder="Enter city name">
+  <button onclick="getWeather()">Get Weather</button>
+
+  <div id="result">Enter a city and click the button.</div>
+
+  <script>
+    const API_URL = "https://fa3prxefk5.execute-api.eu-north-1.amazonaws.com/weather-api";
+
+    async function getWeather() {
+      const city = document.getElementById("cityInput").value;
+
+      if (!city) {
+        document.getElementById("result").innerText = "Please enter a city name.";
+        return;
+      }
+
+      document.getElementById("result").innerText = "Loading...";
+
+      try {
+        const res = await fetch(`${API_URL}?city=${city}`);
+        const data = await res.json();
+
+        if (data.error) {
+          document.getElementById("result").innerText = "Error: " + data.error;
+          return;
+        }
+
+        document.getElementById("result").innerText =
+          `🌍 City: ${data.city}\n` +
+          `🌡 Temperature: ${data.temp} °C\n` +
+          `😌 Feels Like: ${data.feels_like} °C\n` +
+          `☁️ Condition: ${data.description}`;
+      } catch (err) {
+        document.getElementById("result").innerText = "Failed to fetch weather data.";
+      }
+    }
+  </script>
+
+</body>
+</html>
